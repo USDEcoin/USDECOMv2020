@@ -1,0 +1,81 @@
+policy_module(usdecoin, 1.100.1)
+
+########################################
+#
+# Declarations
+#
+
+type usdecoin_t;
+type usdecoin_exec_t;
+init_daemon_domain(usdecoin_t, usdecoin_exec_t)
+
+permissive usdecoin_t;
+
+type usdecoin_initrc_exec_t;
+init_script_file(usdecoin_initrc_exec_t)
+
+type usdecoin_conf_t;
+files_type(usdecoin_conf_t)
+
+type usdecoin_var_lib_t;
+files_type(usdecoin_var_lib_t)
+
+type usdecoin_var_run_t;
+files_type(usdecoin_var_run_t)
+
+type usdecoin_port_t;
+corenet_port(usdecoin_port_t)
+
+########################################
+#
+# usdecoin local policy
+#
+allow usdecoin_t self:process { fork };
+
+allow usdecoin_t self:fifo_file rw_fifo_file_perms;
+allow usdecoin_t self:unix_stream_socket create_stream_socket_perms;
+
+manage_dirs_pattern(usdecoin_t, usdecoin_conf_t, usdecoin_conf_t)
+manage_files_pattern(usdecoin_t, usdecoin_conf_t, usdecoin_conf_t)
+
+manage_dirs_pattern(usdecoin_t, usdecoin_var_lib_t, usdecoin_var_lib_t)
+manage_files_pattern(usdecoin_t, usdecoin_var_lib_t, usdecoin_var_lib_t)
+files_var_lib_filetrans(usdecoin_t, usdecoin_var_lib_t, { dir file })
+
+manage_dirs_pattern(usdecoin_t, usdecoin_var_run_t, usdecoin_var_run_t)
+manage_files_pattern(usdecoin_t, usdecoin_var_run_t, usdecoin_var_run_t)
+
+sysnet_dns_name_resolve(usdecoin_t)
+corenet_all_recvfrom_unlabeled(usdecoin_t)
+
+allow usdecoin_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(usdecoin_t)
+corenet_tcp_sendrecv_generic_node(usdecoin_t)
+corenet_tcp_sendrecv_all_ports(usdecoin_t)
+corenet_tcp_bind_generic_node(usdecoin_t)
+
+gen_require(`
+    type usdecoin_port_t;
+')
+allow usdecoin_t usdecoin_port_t:tcp_socket name_bind;
+
+gen_require(`
+    type usdecoin_port_t;
+')
+allow usdecoin_t usdecoin_port_t:tcp_socket name_connect;
+
+domain_use_interactive_fds(usdecoin_t)
+
+files_read_etc_files(usdecoin_t)
+
+miscfiles_read_localization(usdecoin_t)
+
+sysnet_dns_name_resolve(usdecoin_t)
+
+allow usdecoin_t usdecoin_exec_t:file execute_no_trans;
+allow usdecoin_t self:process setsched;
+corecmd_exec_ls(usdecoin_t)
+corenet_tcp_connect_http_port(usdecoin_t)
+dev_read_urand(usdecoin_t)
+fs_getattr_xattr_fs(usdecoin_t)
+kernel_read_system_state(usdecoin_t)

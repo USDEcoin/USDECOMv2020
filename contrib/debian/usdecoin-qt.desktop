@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=Usdecoin Core
+Comment=Connect to the Usdecoin P2P Network
+Comment[de]=Verbinde mit dem Usdecoin peer-to-peer Netzwerk
+Comment[fr]=Usdecoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Usdecoin, eşten eşe kriptografik sanal para birimi
+Exec=usdecoin-qt %u
+Terminal=false
+Type=Application
+Icon=usdecoin128
+MimeType=x-scheme-handler/usdecoin;
+Categories=Office;Finance;P2P;Network;Qt;
+StartupWMClass=Usdecoin-qt
